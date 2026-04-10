@@ -1,0 +1,15 @@
+---
+title: 'Example Events'
+description: "This is an example of an event post."
+date: 2025-7-27
+author: { username: 'makosai', name: 'Kristopher Ali' }
+category: Events
+---
+
+> **Hello:**
+>
+> {description}
+
+## Todo Blog Post
+
+...

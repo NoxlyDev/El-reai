@@ -1,0 +1,126 @@
+.poppins {
+	font-family: 'Poppins', sans-serif;
+}
+
+.metropolis {
+	font-family: 'Metropolis', sans-serif;
+}
+
+h1 {
+	@apply text-6xl font-bold;
+}
+
+h2 {
+	@apply text-4xl font-black;
+}
+
+h3 {
+	@apply text-2xl font-black;
+}
+p.blog + h3 {
+	@apply mt-12!;
+}
+h4 {
+	@apply text-xl font-black;
+}
+h5 {
+	@apply text-lg font-black;
+}
+
+.legal {
+	@apply mx-auto max-w-(--breakpoint-lg);
+
+	h1 + p {
+		@apply mb-4 mt-2 font-bold text-r-gold;
+	}
+
+	p + h2,
+	ul + h2,
+	p + h3,
+	ul + h3,
+	p + h4,
+	ul + h4 {
+		@apply mt-8;
+	}
+
+	p + p {
+		@apply mt-4;
+	}
+
+	h2,
+	h3,
+	h4 {
+		@apply mb-2 text-r-gold;
+	}
+
+	h3 + h4 {
+		@apply mt-4;
+	}
+}
+
+ul li {
+	@apply my-1 list-inside list-disc;
+}
+ul li p {
+	@apply inline;
+}
+
+h1 strong,
+h2 strong {
+	@apply font-black text-r-gold;
+}
+
+p.lead strong {
+	@apply font-black text-r-gold;
+}
+
+h1.page-title {
+	@apply text-center font-black text-r-gold;
+}
+h1.alt strong {
+	@apply text-r-purple-deep;
+}
+h2.alt strong {
+	@apply text-(--warning)!;
+}
+
+a {
+	@apply text-r-blue-light underline;
+}
+a:hover {
+	@apply text-r-blue-default;
+}
+a:active {
+	@apply text-(--primary);
+}
+a.scaly {
+	@apply scale-90 transition-[scale];
+}
+a.unset {
+	@apply text-[initial] no-underline;
+}
+
+.info-paragraph {
+	@apply max-w-(--breakpoint-md) indent-6 text-lg font-medium;
+}
+
+code.gold {
+	@apply text-r-gold;
+}
+
+.blog-container {
+	@apply mx-auto w-full max-w-(--breakpoint-lg);
+}
+p.blog {
+	@apply my-4;
+}
+p.blog.col {
+	@apply md:columns-2;
+}
+p.blog + p.blog {
+	@apply mt-0;
+}
+
+.bg {
+	@apply w-fit bg-r-midnight-300 p-2;
+}

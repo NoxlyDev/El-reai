@@ -1,0 +1,68 @@
+:root {
+	--primary: #7666c1;
+	--secondary: #ffffff;
+	--tertiary: #f9f3e5;
+	--success: #77dd77;
+	--danger: #ff6961;
+	--warning: #ffd700;
+	--info: #add8e6;
+	--link: #b0c4de;
+	--border: #f4f4f4;
+	--borderHalf: #f4f4f480;
+	--borderQuarter: #f4f4f440;
+	--borderBlueHalf: #86c7f980;
+	--borderSilver: #d2d9e7;
+	--silverDark: #2b364c;
+	--silverLight: #94a2b7;
+	--textGray: #808080;
+	--buttonGray: #d3d3d3;
+	--light: #f0f8ff;
+	--dark: #323232;
+	--white: #ffffff;
+	--black: #000000;
+	--lightDark: #424242;
+	--gold: #fed18e;
+	--gold2: #fdbd5d;
+	--goldHalf: #fed18ebb;
+	--red: #fc3c35;
+	--crimsonRed: #ff4646bf;
+	--yellow: #f9fc35;
+	--lightBlue: #47aaf5;
+	--blue: #239af4;
+	--blueHighlight: #0b78cb;
+	--deepBlue: #0d47a1; /* #1e90ff */
+	--midnightBlue: #081247;
+	--midnightBlueIconBG: #394690;
+	--midnight5: #101537;
+	--midnight2: #151b47;
+	--midnight3: #172569;
+	--midnight4: #1c2c7d;
+	--midnight1: #2b5073;
+	--midnight6: #39468e;
+	--midnight7: #4757b3;
+	--deepPurple: #220d54;
+	--deepPurpleHighlight: #3a168d;
+	--deepPurpleHighlightHalf: #3a168d80;
+}
+
+.glass {
+	/* From https://css.glass */
+	background: rgba(58, 50, 95, 0.3);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-light {
+	background: rgba(255, 255, 255, 0.09);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-dark {
+	background: rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,125 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@import './css/buttons.css';
+@import './css/colors.css';
+@import './css/form.css';
+@import './css/layout.css';
+@import './css/typography.css';
+
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton/optional/presets';
+@import '@skeletonlabs/skeleton/themes/rose';
+
+
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+@plugin 'flowbite/plugin';
+
+@source "../node_modules/flowbite-svelte/dist";
+@source "../node_modules/flowbite-svelte-icons/dist";
+
+@config '../tailwind.config.ts';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--color-black-alt-100: #a9cec2;
+	--color-black-alt-200: #87a8a8;
+	--color-black-alt-300: #6d8389;
+	--color-black-alt-400: #556067;
+	--color-black-alt-500: #3d3f43;
+	--color-black-alt-600: #222222;
+
+	--color-blue-alt-600: #0073e6;
+
+	--breakpoint-xs: 375px;
+	--breakpoint-mdlg: 928px;
+
+	--text-md: 1.063rem; /* 17px */
+
+	--shadow-float: 0px 0px 20px 16px rgba(17,17,26,0.08);
+}
+
+:root {
+	--text-scaling: 1;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
+}
+
+/* urbanist-latin-wght-normal */
+@font-face {
+	font-family: 'Urbanist Variable';
+	font-style: normal;
+	font-display: block;
+	font-weight: 100 900;
+	src: url(@fontsource-variable/urbanist/files/urbanist-latin-wght-normal.woff2)
+		format('woff2-variations');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* poppins-latin-500-normal */
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-display: block;
+	font-weight: 500;
+	src:
+		url(@fontsource/poppins/files/poppins-latin-500-normal.woff2) format('woff2'),
+		url(@fontsource/poppins/files/poppins-latin-500-normal.woff) format('woff');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* poppins-latin-700-normal */
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-display: block;
+	font-weight: 700;
+	src:
+		url(@fontsource/poppins/files/poppins-latin-700-normal.woff2) format('woff2'),
+		url(@fontsource/poppins/files/poppins-latin-700-normal.woff) format('woff');
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+		U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+html,
+body {
+	@apply min-h-full;
+	scroll-padding-top: 96px;
+}
+
+html {
+	scrollbar-color: rgba(128, 128, 128, 0.5) rgba(0, 0, 0, 0.1);
+}
+body {
+	@apply bg-r-midnight-blue text-r-white sm:text-lg;
+	font-family: 'Urbanist Variable', sans-serif;
+}
+
+iconify-icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+}
