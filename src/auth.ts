@@ -4,9 +4,18 @@ import Credentials from '@auth/sveltekit/providers/credentials';
 import Google from '@auth/sveltekit/providers/google';
 import bcrypt from 'bcryptjs';
 import { prisma } from '$lib/server/prisma';
+import { generateUniqueCustomId } from '$lib/server/dynamic-id';
+
+const prismaAdapter = PrismaAdapter(prisma);
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-	adapter: PrismaAdapter(prisma),
+	adapter: {
+		...prismaAdapter,
+		createUser: async (data) => {
+			const custom_id = await generateUniqueCustomId();
+			return prismaAdapter.createUser!({ ...data, custom_id } as Parameters<typeof prismaAdapter.createUser>[0]);
+		}
+	},
 
 	providers: [
 		Credentials({
@@ -44,7 +53,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 			? [
 					Google({
 						clientId: process.env.GOOGLE_CLIENT_ID,
-						clientSecret: process.env.GOOGLE_CLIENT_SECRET
+						clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+						allowDangerousEmailAccountLinking: true
 					})
 				]
 			: [])
@@ -88,7 +98,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		error: '/login'
 	},
 
-	// AUTH_TRUST_HOST=true wajib untuk Vercel/deployment non-localhost
 	trustHost: process.env.AUTH_TRUST_HOST === 'true' || process.env.NODE_ENV === 'production',
 	secret: process.env.AUTH_SECRET
 });
