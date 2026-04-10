@@ -1,61 +1,24 @@
 <script lang="ts">
 	import { baseLocale, getLocale, type Locale, setLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import User3Fill from '~icons/mingcute/user-3-fill';
 	import Back from '~icons/mingcute/back-fill';
 	import { LOCALES } from '$lib/info';
+	import * as m from '$lib/paraglide/messages.js';
 
 	type Screens = 'main' | 'language';
 
-	let closeInterval: ReturnType<typeof setTimeout> | undefined = undefined;
+	let closeInterval: NodeJS.Timeout | undefined = undefined;
 	let copyInterval: ReturnType<typeof setTimeout> | undefined = $state(undefined);
 	let currentScreen: Screens = $state('main');
 	let isOpen = $state(false);
 
-	// Session dari SSR layout (tersedia langsung untuk halaman SSR)
-	const serverSession = $derived($page.data.session);
-
-	// Session tambahan via client-side fetch (untuk halaman yang di-prerender)
-	let clientSession:
-		| {
-				user?: {
-					name?: string | null;
-					email?: string | null;
-					image?: string | null;
-					custom_id?: string;
-				};
-		  }
-		| null
-		| undefined = $state(undefined);
-
-	onMount(async () => {
-		if (!serverSession) {
-			try {
-				const res = await fetch('/auth/session');
-				if (res.ok) {
-					const data = await res.json();
-					clientSession = data?.user ? data : null;
-				} else {
-					clientSession = null;
-				}
-			} catch {
-				clientSession = null;
-			}
-		}
-	});
-
-	// Gunakan session dari server jika tersedia, jika tidak gunakan hasil fetch client-side
-	const session = $derived(serverSession ?? clientSession);
-
+	const session = $derived($page.data.session);
 	const account = $derived(
 		session?.user
 			? {
-					// Ambil max 2 kata dari nama Google, atau prefix email jika nama kosong
-					name: session.user.name
-						? session.user.name.split(' ').slice(0, 2).join(' ')
-						: (session.user.email?.split('@')[0] ?? 'User'),
-					username: (session.user as { custom_id?: string }).custom_id ?? '',
+					name: session.user.name ?? session.user.email ?? m.common_user(),
+					username: (session.user as { custom_id?: string }).custom_id ?? session.user.email ?? '',
 					email: session.user.email ?? '',
 					image: session.user.image ?? null
 				}
@@ -76,6 +39,7 @@
 	}
 	function onClick() {
 		isOpen = !isOpen;
+
 		if (isOpen) {
 			document.addEventListener('click', onClickOutside);
 			document.addEventListener('keydown', onClickOutsideKeydown);
@@ -111,9 +75,12 @@
 			currentScreen = 'main';
 		}, 0);
 	}
+
 	function handleCopyUsername(event: MouseEvent | KeyboardEvent) {
 		event.stopPropagation();
-		if (copyInterval) clearTimeout(copyInterval);
+		if (copyInterval) {
+			clearTimeout(copyInterval);
+		}
 		navigator.clipboard.writeText(account!.username);
 		const el = event.currentTarget as HTMLElement;
 		el.classList.add('copied');
@@ -121,6 +88,7 @@
 			el.classList.remove('copied');
 		}, 2000);
 	}
+
 	function logout() {
 		closeMenu();
 	}
@@ -130,7 +98,7 @@
 	<button
 		id="nav-account-button"
 		onclick={onClick}
-		aria-label="Account and Settings"
+		aria-label={m.nav_account_label()}
 		role="menubar"
 		tabindex="0"
 		aria-controls="nav-account-dropdown"
@@ -143,64 +111,65 @@
 			<div class:hidden={currentScreen !== 'main'}>
 				{#if account}
 					<div class="menu-section !flex-row">
-						<div class="profile-icon">{account.name.charAt(0).toUpperCase()}</div>
+						<div class="profile-icon"></div>
 						<div class="account-info">
-							<span class="account-name" title={account.name}>{account.name}</span>
-							{#if account.username}
-								<span
-									class="account-id"
-									tabindex="0"
-									role="button"
-									aria-label="Copy username"
-									title="Klik untuk copy"
-									onclick={(e) => {
-										e.stopPropagation();
+							<span class="account-name">{account.name}</span>
+							<span
+								class="account-id"
+								tabindex="0"
+								role="button"
+								aria-label={m.nav_copy_username()}
+								onclick={(e) => {
+									e.stopPropagation();
+									handleCopyUsername(e);
+								}}
+								onkeydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault();
 										handleCopyUsername(e);
-									}}
-									onkeydown={(e) => {
-										if (e.key === 'Enter' || e.key === ' ') {
-											e.preventDefault();
-											handleCopyUsername(e);
-										}
-									}}
-								>
-									@{account.username}
-								</span>
-							{/if}
+									}
+								}}
+							>
+								@{account.username}
+							</span>
 						</div>
 					</div>
 					<div class="menu-section">
-						<a href="/profile" role="menuitem" aria-label="Profil Saya" onclick={onClick}>
-							Profil Saya
+						<a href="/profile" role="menuitem" aria-label={m.nav_view_profile()} onclick={onClick}>
+							{m.nav_view_profile()}
 						</a>
 						<a
 							href="/profile/settings"
 							role="menuitem"
-							aria-label="Pengaturan Akun"
+							aria-label={m.nav_account_settings()}
 							onclick={onClick}
 						>
-							Pengaturan
+							{m.nav_account_settings()}
 						</a>
-						<a href="/logout" role="menuitem" aria-label="Keluar" class="logout-link" onclick={logout}>
-							Keluar
+						<a href="/logout" role="menuitem" aria-label={m.nav_logout()} class="mt-3" onclick={logout}>
+							{m.nav_logout()}
 						</a>
 					</div>
 				{:else}
 					<div class="menu-section">
-						<a href="/login" role="menuitem" aria-label="Login" onclick={onClick}>Login</a>
-						<a href="/register" role="menuitem" aria-label="Register" onclick={onClick}>Register</a>
+						<a href="/login" role="menuitem" aria-label={m.nav_login()} onclick={onClick}>
+							{m.nav_login()}
+						</a>
+						<a href="/register" role="menuitem" aria-label={m.nav_register()} onclick={onClick}>
+							{m.nav_register()}
+						</a>
 					</div>
 				{/if}
 				<div class="menu-section">
-					<button role="menuitem" aria-label="Ganti Bahasa" onclick={openLocale}>
-						Ganti Bahasa
+					<button role="menuitem" aria-label={m.nav_change_language()} onclick={openLocale}>
+						{m.nav_change_language()}
 					</button>
 				</div>
 			</div>
 			<div class:hidden={currentScreen !== 'language'}>
-				<button class="back" role="menuitem" aria-label="Kembali" onclick={goBack}>
+				<button class="back" role="menuitem" aria-label={m.nav_back()} onclick={goBack}>
 					<Back />
-					<span>Kembali</span>
+					<span>{m.nav_back()}</span>
 				</button>
 				<div class="menu-section">
 					{#each Object.keys(LOCALES) as key}
@@ -250,7 +219,7 @@
 			@apply not-mdlg:-right-16 absolute top-full right-0;
 			@apply transition-opacity duration-300;
 			@apply shadow-float mt-2 bg-white p-2;
-			@apply min-w-48 max-w-56 w-56 rounded-2xl opacity-0;
+			@apply min-w-48 rounded-2xl opacity-0;
 			animation: fadeOut 0.3s ease-in-out forwards;
 
 			&.open {
@@ -269,16 +238,20 @@
 				.profile-icon {
 					@apply bg-blue-alt-600 mr-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full;
 					@apply text-lg font-bold text-white;
+
+					&:before {
+						content: 'M';
+					}
 				}
 
 				.account-info {
-					@apply flex flex-col min-w-0 overflow-hidden;
+					@apply flex flex-col;
 
 					.account-name {
-						@apply text-black-alt-600 text-md font-bold truncate;
+						@apply text-black-alt-600 text-md font-bold;
 					}
 					.account-id {
-						@apply text-black-alt-400 text-xs cursor-pointer truncate;
+						@apply text-black-alt-400 text-xs;
 					}
 				}
 
@@ -292,10 +265,6 @@
 					&.selected {
 						@apply border-blue-alt-600/20 hover:border-blue-alt-600/75 border-r-3 font-bold;
 					}
-				}
-
-				a.logout-link {
-					@apply mt-2 text-red-500 hover:text-red-600;
 				}
 			}
 

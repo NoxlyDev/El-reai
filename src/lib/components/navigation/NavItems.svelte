@@ -1,6 +1,7 @@
 <script lang="ts">
-	import listData from './ListData';
+	import { getListData } from './ListData';
 	import DownSmalllFill from '~icons/mingcute/down-small-fill';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	interface Props {
 		isOpen: boolean;
@@ -9,16 +10,17 @@
 
 	let { isOpen, toggle }: Props = $props();
 	let hoverIndex = $state(-1);
+
+	const locale = $derived(getLocale());
+	const listData = $derived(locale ? getListData() : getListData());
+
 	function onHover(e: MouseEvent | FocusEvent, index: number, isMobile: boolean = false) {
 		e.stopPropagation();
-		console.log('hovered');
 		if (!isMobile && window.innerWidth < 928) return;
-		if(isMobile && hoverIndex == index) {
-			console.log('ba', hoverIndex);
+		if (isMobile && hoverIndex == index) {
 			hoverIndex = -1;
 			return;
 		}
-		console.log('bo', hoverIndex, index);
 		hoverIndex = index;
 		highlightLink();
 	}
@@ -30,23 +32,10 @@
 	}
 
 	function onBlur() {
-		// Check if current focus is a child of the nav items
 		const navItems = document.querySelector('.nav-items');
-
-		if (!navItems) {
-			console.error("Couldn't find the navigation items container.");
-			return;
-		}
-
+		if (!navItems) return;
 		setTimeout(() => {
-			if (document.activeElement && navItems.contains(document.activeElement)) {
-				// If it is, do not clean the highlighter
-				console.log('active element is within nav items, not cleaning highlighter');
-				return;
-			}
-			// If not, clean the highlighter
-			console.log('active element is outside nav items, cleaning highlighter');
-
+			if (document.activeElement && navItems.contains(document.activeElement)) return;
 			hoverIndex = -1;
 			cleanHighlighter();
 		}, 0);
@@ -57,7 +46,6 @@
 			cleanHighlighter();
 			return;
 		}
-		// Set the highlighter position based on the hovered link
 		const id = `nav-link-${hoverIndex}`;
 		const linkElement = document.getElementById(id);
 		if (linkElement) {
@@ -79,7 +67,7 @@
 			highlighter.style.display = 'none';
 			highlighter.style.width = '0';
 			highlighter.style.left = '0';
-			highlighter.style.transition = 'none'; // Disable transition for immediate effect
+			highlighter.style.transition = 'none';
 		}
 		toggle(false);
 	}

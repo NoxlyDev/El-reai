@@ -3,14 +3,15 @@
 	import PlayFill from '~icons/mingcute/play-fill';
 	import Discord from '~icons/mingcute/discord-fill';
 	import NavAccount from './NavAccount.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 </script>
 
 <div class="nav-actions">
-	<a href="/game" aria-label="Play game" class="play">
-		<span class="text-lg">Play now</span>
+	<a href="/game" aria-label={m.nav_play_now()} class="play">
+		<span class="text-lg">{m.nav_play_now()}</span>
 		<PlayFill />
 	</a>
-	<a href={alinks.discord} target="_blank" rel="noopener" aria-label="Join discord">
+	<a href={alinks.discord} target="_blank" rel="noopener" aria-label={m.nav_join_discord()}>
 		<Discord />
 	</a>
 	<NavAccount />

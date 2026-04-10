@@ -1,14 +1,12 @@
 <script lang="ts">
 	import NewsletterButton from './NewsletterButton.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 </script>
 
 <div class="newsletter">
-	<span>Get notified</span>
-	<h2>Join Us for an Adventure</h2>
-	<p>
-		Sign up with your email to join the waitlist to play <strong>Reia</strong> early. We'll send you
-		updates on the game's progress and notify you when we do tests and releases.
-	</p>
+	<span>{m.footer_newsletter_label()}</span>
+	<h2>{m.footer_newsletter_title()}</h2>
+	<p>{m.footer_newsletter_desc()}</p>
 	<NewsletterButton />
 </div>
 
