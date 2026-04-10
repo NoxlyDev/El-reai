@@ -11,7 +11,9 @@
 
 	let { data } = $props();
 
-	const { url, keywords, locale } = data;
+	const url = $derived(data.url);
+	const keywords = $derived(data.keywords);
+	const locale = $derived(data.locale);
 
 	function getDate() {
 		const dateArr = new Date(datePublished).toDateString().split(' ').slice(1);
@@ -47,7 +49,7 @@
 			<span>Lore</span>
 			<h1>The Ethereals</h1>
 			<div class="meta">
-				<time datetime={date}>Last updated: {getDate()}</time>
+				<time datetime={datePublished}>Last updated: {getDate()}</time>
 			</div>
 
 			<h2 id="reia-the-light">Reia, the Ethereal</h2>

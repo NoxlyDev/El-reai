@@ -8,7 +8,9 @@
 	import Wumpus from '$images/banners/wumpus.png?enhanced&w=720;540;360';
 
 	let { data } = $props();
-	const { currentPage, posts, pages } = data;
+	const currentPage = $derived(data.currentPage);
+	const posts = $derived(data.posts);
+	const pages = $derived(data.pages);
 
 	let title = 'Blog, News, Guide, Events, Patch Notes and Dev Blogs';
 	let description =

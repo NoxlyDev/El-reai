@@ -43,10 +43,11 @@
 		children = undefined
 	}: Props = $props();
 
-	const _title =
+	const _title = $derived(
 		page.url.pathname !== '/' && !Object.keys(LOCALES).includes(page.url.pathname.substring(1))
 			? decorate(title, reverseDecoration)
-			: title;
+			: title
+	);
 
 	function decorate(title: string, reverseDecoration?: boolean | null): string {
 		if (reverseDecoration === null) return title;

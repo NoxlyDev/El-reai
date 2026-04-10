@@ -35,9 +35,9 @@
 		children
 	}: Props = $props();
 
-	let year = date ? new Intl.DateTimeFormat('en-US', { year: 'numeric' }).format(date) : undefined;
-	let month = date ? new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date) : undefined;
-	let day = date ? new Intl.DateTimeFormat('en-US', { day: '2-digit' }).format(date) : undefined;
+	const year = $derived(date ? new Intl.DateTimeFormat('en-US', { year: 'numeric' }).format(date) : undefined);
+	const month = $derived(date ? new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date) : undefined);
+	const day = $derived(date ? new Intl.DateTimeFormat('en-US', { day: '2-digit' }).format(date) : undefined);
 </script>
 
 <div class="section-card">
