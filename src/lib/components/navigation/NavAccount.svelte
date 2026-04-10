@@ -17,7 +17,17 @@
 	const serverSession = $derived($page.data.session);
 
 	// Session tambahan via client-side fetch (untuk halaman yang di-prerender)
-	let clientSession: { user?: { name?: string | null; email?: string | null; image?: string | null; custom_id?: string } } | null | undefined = $state(undefined);
+	let clientSession:
+		| {
+				user?: {
+					name?: string | null;
+					email?: string | null;
+					image?: string | null;
+					custom_id?: string;
+				};
+		  }
+		| null
+		| undefined = $state(undefined);
 
 	onMount(async () => {
 		if (!serverSession) {
@@ -41,7 +51,10 @@
 	const account = $derived(
 		session?.user
 			? {
-					name: session.user.name ?? session.user.email ?? 'User',
+					// Ambil max 2 kata dari nama Google, atau prefix email jika nama kosong
+					name: session.user.name
+						? session.user.name.split(' ').slice(0, 2).join(' ')
+						: (session.user.email?.split('@')[0] ?? 'User'),
 					username: (session.user as { custom_id?: string }).custom_id ?? '',
 					email: session.user.email ?? '',
 					image: session.user.image ?? null
@@ -98,7 +111,6 @@
 			currentScreen = 'main';
 		}, 0);
 	}
-
 	function handleCopyUsername(event: MouseEvent | KeyboardEvent) {
 		event.stopPropagation();
 		if (copyInterval) clearTimeout(copyInterval);
@@ -109,7 +121,6 @@
 			el.classList.remove('copied');
 		}, 2000);
 	}
-
 	function logout() {
 		closeMenu();
 	}
@@ -134,13 +145,14 @@
 					<div class="menu-section !flex-row">
 						<div class="profile-icon">{account.name.charAt(0).toUpperCase()}</div>
 						<div class="account-info">
-							<span class="account-name">{account.name}</span>
+							<span class="account-name" title={account.name}>{account.name}</span>
 							{#if account.username}
 								<span
 									class="account-id"
 									tabindex="0"
 									role="button"
 									aria-label="Copy username"
+									title="Klik untuk copy"
 									onclick={(e) => {
 										e.stopPropagation();
 										handleCopyUsername(e);
@@ -158,19 +170,19 @@
 						</div>
 					</div>
 					<div class="menu-section">
-						<a href="/profile" role="menuitem" aria-label="View Profile" onclick={onClick}>
-							View Profile
+						<a href="/profile" role="menuitem" aria-label="Profil Saya" onclick={onClick}>
+							Profil Saya
 						</a>
 						<a
 							href="/profile/settings"
 							role="menuitem"
-							aria-label="Account Settings"
+							aria-label="Pengaturan Akun"
 							onclick={onClick}
 						>
-							Account Settings
+							Pengaturan
 						</a>
-						<a href="/logout" role="menuitem" aria-label="Logout" class="mt-3" onclick={logout}>
-							Logout
+						<a href="/logout" role="menuitem" aria-label="Keluar" class="logout-link" onclick={logout}>
+							Keluar
 						</a>
 					</div>
 				{:else}
@@ -180,15 +192,15 @@
 					</div>
 				{/if}
 				<div class="menu-section">
-					<button role="menuitem" aria-label="Change Language" onclick={openLocale}>
-						Change Language
+					<button role="menuitem" aria-label="Ganti Bahasa" onclick={openLocale}>
+						Ganti Bahasa
 					</button>
 				</div>
 			</div>
 			<div class:hidden={currentScreen !== 'language'}>
-				<button class="back" role="menuitem" aria-label="Back to Main Menu" onclick={goBack}>
+				<button class="back" role="menuitem" aria-label="Kembali" onclick={goBack}>
 					<Back />
-					<span>Back</span>
+					<span>Kembali</span>
 				</button>
 				<div class="menu-section">
 					{#each Object.keys(LOCALES) as key}
@@ -238,7 +250,7 @@
 			@apply not-mdlg:-right-16 absolute top-full right-0;
 			@apply transition-opacity duration-300;
 			@apply shadow-float mt-2 bg-white p-2;
-			@apply min-w-48 rounded-2xl opacity-0;
+			@apply min-w-48 max-w-56 w-56 rounded-2xl opacity-0;
 			animation: fadeOut 0.3s ease-in-out forwards;
 
 			&.open {
@@ -260,13 +272,13 @@
 				}
 
 				.account-info {
-					@apply flex flex-col;
+					@apply flex flex-col min-w-0 overflow-hidden;
 
 					.account-name {
-						@apply text-black-alt-600 text-md font-bold;
+						@apply text-black-alt-600 text-md font-bold truncate;
 					}
 					.account-id {
-						@apply text-black-alt-400 text-xs cursor-pointer;
+						@apply text-black-alt-400 text-xs cursor-pointer truncate;
 					}
 				}
 
@@ -280,6 +292,10 @@
 					&.selected {
 						@apply border-blue-alt-600/20 hover:border-blue-alt-600/75 border-r-3 font-bold;
 					}
+				}
+
+				a.logout-link {
+					@apply mt-2 text-red-500 hover:text-red-600;
 				}
 			}
 
